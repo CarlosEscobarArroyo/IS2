@@ -5,6 +5,4 @@ public interface PaymentMethod {
     public double calculateProcessingFee(double amount);
     public String getPaymentType();
 
-
-
 }

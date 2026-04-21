@@ -13,11 +13,11 @@ public class BankTransferPayment implements PaymentMethod{
 
     @Override
     public double calculateProcessingFee(double amount) {
-        return 0;
+        return 5.0;
     }
 
     @Override
     public String getPaymentType() {
-        return "";
+        return "BANK_TRANSFER";
     }
 }

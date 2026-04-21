@@ -14,11 +14,11 @@ public class CreditCardPayment implements PaymentMethod{
 
     @Override
     public double calculateProcessingFee(double amount) {
-        return 0;
+        return amount * 0.03;
     }
 
     @Override
     public String getPaymentType() {
-        return "";
+        return "CREDIT_CARD";
     }
 }

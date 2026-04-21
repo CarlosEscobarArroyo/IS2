@@ -13,11 +13,11 @@ public class PayPalPayment implements PaymentMethod{
 
     @Override
     public double calculateProcessingFee(double amount) {
-        return 0;
+        return amount * 0.025;
     }
 
     @Override
     public String getPaymentType() {
-        return "";
+        return "PAYPAL";
     }
 }
