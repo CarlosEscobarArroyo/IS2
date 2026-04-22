@@ -1,4 +1,4 @@
-package pe.edu.ulima.is2.lab2.corrected.paymentprocessor;
+package pe.edu.ulima.is2.lab2.corrected.OCP;
 
 import java.util.HashMap;
 

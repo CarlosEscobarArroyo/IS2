@@ -1,4 +1,4 @@
-package pe.edu.ulima.is2.lab2.corrected.user;
+package pe.edu.ulima.is2.lab2.corrected.SRP;
 
 public class NotificationService {
     public void sendWelcomeEmail(User user) {

@@ -4,15 +4,30 @@ import pe.edu.ulima.is2.lab2.corrected.LSP.DigitalProduct;
 import pe.edu.ulima.is2.lab2.corrected.LSP.PhysicalProduct;
 import pe.edu.ulima.is2.lab2.corrected.LSP.Product;
 import pe.edu.ulima.is2.lab2.corrected.LSP.ServiceProduct;
-import pe.edu.ulima.is2.lab2.corrected.paymentprocessor.ApplePayPayment;
-import pe.edu.ulima.is2.lab2.corrected.paymentprocessor.BankTransferPayment;
-import pe.edu.ulima.is2.lab2.corrected.paymentprocessor.CreditCardPayment;
-import pe.edu.ulima.is2.lab2.corrected.paymentprocessor.PayPalPayment;
-import pe.edu.ulima.is2.lab2.corrected.paymentprocessor.PaymentMethod;
-import pe.edu.ulima.is2.lab2.corrected.paymentprocessor.PaymentProcessor;
-import pe.edu.ulima.is2.lab2.corrected.user.DiscountCalculator;
-import pe.edu.ulima.is2.lab2.corrected.user.User;
-import pe.edu.ulima.is2.lab2.corrected.user.UserReportGenerator;
+import pe.edu.ulima.is2.lab2.corrected.OCP.ApplePayPayment;
+import pe.edu.ulima.is2.lab2.corrected.OCP.BankTransferPayment;
+import pe.edu.ulima.is2.lab2.corrected.OCP.CreditCardPayment;
+import pe.edu.ulima.is2.lab2.corrected.OCP.PayPalPayment;
+import pe.edu.ulima.is2.lab2.corrected.OCP.PaymentMethod;
+import pe.edu.ulima.is2.lab2.corrected.OCP.PaymentProcessor;
+import pe.edu.ulima.is2.lab2.corrected.SRP.DiscountCalculator;
+import pe.edu.ulima.is2.lab2.corrected.SRP.User;
+import pe.edu.ulima.is2.lab2.corrected.SRP.UserReportGenerator;
+import pe.edu.ulima.is2.lab2.corrected.ISP.BasicOrderProcessor;
+import pe.edu.ulima.is2.lab2.corrected.ISP.CompleteOrderProcessor;
+import pe.edu.ulima.is2.lab2.corrected.ISP.OrderManager;
+import pe.edu.ulima.is2.lab2.corrected.ISP.ShippingOrderProcessor;
+import pe.edu.ulima.is2.lab2.corrected.ISP.ShippingService;
+import pe.edu.ulima.is2.lab2.corrected.DIP.EmailNotificationService;
+import pe.edu.ulima.is2.lab2.corrected.DIP.FileLoggerService;
+import pe.edu.ulima.is2.lab2.corrected.DIP.DatabaseOrderRepository;
+import pe.edu.ulima.is2.lab2.corrected.DIP.NotificationService;
+import pe.edu.ulima.is2.lab2.corrected.DIP.Logger;
+import pe.edu.ulima.is2.lab2.corrected.DIP.OrderRepository;
+import pe.edu.ulima.is2.lab2.corrected.DIP.OrderService;
+
+import java.util.Date;
+import java.util.List;
 
 public class SolidViolationsDemo {
     public static void main(String[] args) {
@@ -92,11 +107,48 @@ public class SolidViolationsDemo {
 
     private static void demonstrateISPViolation() {
         System.out.println("--- ISP Violation ---");
-        // TODO: Implementar demostración
+
+        // BasicOrderProcessor SOLO depende de OrderManager (3 métodos)
+        OrderManager basico = new BasicOrderProcessor();
+        basico.createOrder(1, List.of(100, 200));
+        basico.updateOrderStatus(1, "CREADO");
+        basico.cancelOrder(1);
+
+        System.out.println();
+
+        // ShippingOrderProcessor depende de OrderManager + ShippingService
+        ShippingOrderProcessor conEnvio = new ShippingOrderProcessor();
+        conEnvio.createOrder(2, List.of(300));
+        conEnvio.calculateShippingCost(2);
+        conEnvio.scheduleDelivery(2, new Date());
+        conEnvio.trackShipment(2);
+
+        // También funciona por la interfaz pequeña que le interesa al cliente
+        ShippingService soloEnvios = conEnvio;
+        soloEnvios.trackShipment(2);
+
+        System.out.println();
+
+        // CompleteOrderProcessor combina todas las capacidades
+        CompleteOrderProcessor completo = new CompleteOrderProcessor();
+        completo.createOrder(3, List.of(400));
+        completo.processPayment(3, "VISA", "tok_123");
+        completo.sendOrderConfirmation(3);
+        System.out.println(completo.generateOrderReport(3));
     }
 
     private static void demonstrateDIPViolation() {
         System.out.println("--- DIP Violation ---");
-        // TODO: Implementar demostración
+
+        // Producción: dependencias reales inyectadas por constructor
+        NotificationService emailService = new EmailNotificationService();
+        Logger fileLogger = new FileLoggerService();
+        OrderRepository dbRepository = new DatabaseOrderRepository();
+        OrderService produccion = new OrderService(emailService, fileLogger, dbRepository);
+        produccion.processOrder("CUST-001", new String[]{"PROD-1", "PROD-2"}, "EMAIL");
+        produccion.cancelOrder("ORDER-PROD-001");
+
+        System.out.println();
+
     }
 }

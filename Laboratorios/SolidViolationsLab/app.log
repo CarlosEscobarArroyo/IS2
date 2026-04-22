@@ -1,0 +1,6 @@
+2026-04-21 23:30:08 - Iniciando procesamiento de pedido para cliente: CUST-001
+2026-04-21 23:30:08 - Datos de cliente obtenidos: Datos del cliente CUST-001 desde BD
+2026-04-21 23:30:08 - Pedido guardado: ORDER-1776832208623
+2026-04-21 23:30:08 - Pedido procesado completamente: ORDER-1776832208623
+2026-04-21 23:30:08 - Cancelando pedido: ORDER-PROD-001
+2026-04-21 23:30:08 - Pedido cancelado: ORDER-PROD-001
